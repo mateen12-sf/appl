@@ -3,6 +3,12 @@ import { initializeApp, getApps } from 'firebase/app';
 import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore, doc, setDoc, increment, onSnapshot } from 'firebase/firestore';
 
+/**
+ * iDoctors - Medical AI Assistant
+ * This file is prepared for GitHub deployment.
+ * Ensure you have React, Tailwind CSS, and Firebase installed in your project.
+ */
+
 // --- Global Constants ---
 const MODEL_NAME_FLASH = "gemini-2.5-flash-preview-09-2025";
 const API_KEY = ""; // کلیلەکە لێرە جێگیر دەکرێت
@@ -147,7 +153,7 @@ export default function App() {
 
   const t = (k) => (UI_TEXT[language] && UI_TEXT[language][k]) || k;
 
-  // تنظیمکردنی ئایکۆنی دەرەکی تەنها بۆ سیستم
+  // Setting system-level icons
   useEffect(() => {
     let link = document.querySelector("link[rel~='icon']");
     if (!link) {
@@ -193,7 +199,7 @@ export default function App() {
             }
           }
         });
-      } catch (e) { console.error(e); }
+      } catch (e) { console.error("Firebase Auth Error:", e); }
     };
     initFirebase();
   }, []);
@@ -248,21 +254,19 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex justify-center overflow-x-hidden" dir={language === 'en' ? 'ltr' : 'rtl'}>
+    <div className="min-h-screen bg-gray-50 flex justify-center overflow-x-hidden font-sans" dir={language === 'en' ? 'ltr' : 'rtl'}>
       <style dangerouslySetInnerHTML={{__html: `
         input, textarea, select { font-size: 16px !important; }
-        @viewport { width: device-width; zoom: 1.0; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
       `}} />
 
       <div className="w-full max-w-md shadow-2xl min-h-screen flex flex-col border-x border-gray-100 bg-white">
         
-        {/* Header - Removed the side icon as requested */}
+        {/* Header */}
         <header className={`${PRIMARY_COLOR} pt-10 pb-8 px-6 text-white rounded-b-[40px] shadow-lg relative overflow-hidden`}>
           <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-3xl"></div>
           
           <div className="flex justify-between items-center relative z-10">
-            {/* ناوی ئەپەکە بێ وێنە */}
             <h1 className="text-2xl font-black tracking-tight">
               {t('app_title')}
             </h1>
@@ -303,7 +307,7 @@ export default function App() {
         <main className="flex-grow p-4 space-y-6">
           {/* Drug View */}
           {currentView === 'drug' && (
-            <div className="space-y-6 animate-in fade-in duration-500">
+            <div className="space-y-6">
               <div className="bg-white rounded-[30px] p-6 shadow-sm border border-emerald-100 space-y-4">
                 <div className="flex items-center gap-3 mb-2 border-b border-emerald-50 pb-3">
                   <span className="p-2 bg-emerald-100 text-emerald-600 rounded-xl">🔍</span>
@@ -337,7 +341,7 @@ export default function App() {
 
           {/* Lab View */}
           {currentView === 'lab' && (
-            <div className="space-y-6 animate-in fade-in duration-500">
+            <div className="space-y-6">
               <div className="bg-white rounded-[30px] p-6 shadow-sm border border-indigo-100 space-y-4">
                 <div className="flex items-center gap-3 mb-2 border-b border-indigo-50 pb-3">
                   <span className="p-2 bg-indigo-100 text-indigo-600 rounded-xl">🔬</span>
@@ -354,7 +358,7 @@ export default function App() {
 
           {/* Pregnancy View */}
           {currentView === 'pregnancy' && (
-            <div className="space-y-6 animate-in fade-in duration-500">
+            <div className="space-y-6">
               <div className="bg-white rounded-[35px] p-6 shadow-md border border-amber-100 space-y-6">
                 <input type="date" className="w-full p-5 bg-gray-50 rounded-[25px] border-none font-bold shadow-inner text-center" value={query} onChange={(e) => setQuery(e.target.value)} />
                 <button onClick={() => handleAIService('pregnancy_weeks')} className="w-full py-4 bg-amber-500 text-white rounded-2xl font-black text-xs">{t('preg_weeks_btn')}</button>
@@ -365,7 +369,7 @@ export default function App() {
 
           {/* Doctors View */}
           {currentView === 'doctors' && (
-            <div className="space-y-6 animate-in fade-in duration-500">
+            <div className="space-y-6">
               <div className="bg-white rounded-[30px] p-6 shadow-sm border border-sky-100 space-y-4">
                 <div className="bg-gray-50 rounded-2xl p-4 min-h-[250px] max-h-[350px] overflow-y-auto space-y-3 no-scrollbar">
                    {chatHistory.length === 0 && <div className="text-center py-10 text-gray-400 font-bold text-xs">سڵاو، چۆن دەتوانم یارمەتیت بدەم وەک پزیشک؟</div>}
@@ -387,7 +391,7 @@ export default function App() {
 
           {/* QA View */}
           {currentView === 'qa' && (
-            <div className="space-y-4 animate-in fade-in duration-500">
+            <div className="space-y-4">
               <div className="bg-white rounded-[35px] p-6 shadow-md border border-gray-100">
                 <textarea className="w-full p-5 bg-gray-50 rounded-[25px] border-none font-bold shadow-inner" rows="4" value={query} onChange={(e) => setQuery(e.target.value)} placeholder={t('tab_qa')} />
                 <button onClick={() => handleAIService('qa')} className={`w-full mt-4 py-4 rounded-2xl text-white font-black shadow-lg ${VIEW_CONFIG.qa.button}`}>ناردنی پرسیار</button>
@@ -397,7 +401,7 @@ export default function App() {
 
           {/* Donation View */}
           {currentView === 'donation' && (
-            <div className="space-y-6 animate-in fade-in duration-500">
+            <div className="space-y-6">
               <div className="bg-white rounded-[35px] p-8 shadow-md border border-red-100 text-center space-y-6">
                 <span className="text-5xl block">❤️</span>
                 <div className="p-6 bg-gray-50 rounded-[25px] border border-red-50 space-y-3">
@@ -418,6 +422,7 @@ export default function App() {
           )}
         </main>
 
+        {/* Footer */}
         <footer className="p-8 text-center bg-gray-50 border-t border-gray-100 mt-auto">
             <div className="bg-white inline-flex items-center gap-4 px-4 py-2 rounded-full shadow-sm mb-4">
                 <span className="text-[10px] font-black text-gray-400">{t('visitor_count_label')}</span>
@@ -429,4 +434,5 @@ export default function App() {
     </div>
   );
 }
+```eof
 
